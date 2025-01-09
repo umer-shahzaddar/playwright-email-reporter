@@ -1,6 +1,6 @@
-# Email Reporter for Playwright
+# playwright-email-reporter-light
 
-This project provides a custom reporter for Playwright that generates an HTML test report and sends it via email. The report includes summary details such as the number of tests run, passed, failed, flaky, and skipped tests, along with detailed information about failed tests.
+`playwright-email-reporter-light` is a custom Playwright reporter that generates an HTML test report and sends it via email. The report includes a summary of test results and detailed information about failed tests.
 
 ## Features
 
@@ -12,13 +12,11 @@ This project provides a custom reporter for Playwright that generates an HTML te
 
 ## Installation
 
-1. Install the required dependencies:
+Install the package using npm:
 
-   ```bash
-   npm install nodemailer
-   ```
-
-2. Place the `EmailReporter` class in your Playwright project root (e.g., `index.js`).
+```bash
+npm install playwright-email-reporter-light
+```
 
 ## Usage
 
@@ -27,11 +25,9 @@ This project provides a custom reporter for Playwright that generates an HTML te
 In your Playwright configuration file (`playwright.config.js`), add the reporter:
 
 ```javascript
-const path = require('path');
-
 module.exports = {
   reporter: [
-    [path.resolve(__dirname, 'index.js'), {
+    ['playwright-email-reporter-light', {
       link: 'https://example.com/full-report',
       smtpHost: 'smtp.example.com',
       smtpPort: 587,
@@ -103,7 +99,15 @@ const transporter = nodemailer.createTransport({
 });
 ```
 
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request with improvements.
+
 ## License
 
 This project is licensed under the MIT License.
+
+## Repository
+
+[GitHub Repository](https://github.com/your-username/playwright-email-reporter-light)
 

@@ -1,17 +1,28 @@
 {
-  "name": "playwright-mail-reporter",
+  "name": "playwright-email-reporter-light",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {},
   "keywords": [],
   "author": "Umer Shahzad Dar <umer.shahzaddar@subbyx.com>",
   "license": "MIT",
-  "description": "",
+  "description": "This project provides a custom reporter for Playwright that generates an HTML test report and sends it via email. The report includes summary details such as the number of tests run, passed, failed, flaky, and skipped tests, along with detailed information about failed tests.",
   "devDependencies": {
     "@playwright/test": "^1.49.1",
     "@types/node": "^22.10.5"
   },
   "dependencies": {
     "nodemailer": "^6.9.16"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/umer-shahzaddar/playwright-email-reporter-light.git"
+  },
+  "bugs": {
+    "url": "https://github.com/umer-shahzaddar/playwright-email-reporter-light/issues"
+  },
+  "homepage": "https://github.com/umer-shahzaddar/playwright-email-reporter-light#readme"
 }
