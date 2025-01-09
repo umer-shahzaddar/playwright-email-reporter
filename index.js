@@ -81,7 +81,6 @@ class EmailReporter {
         (test) => `
           <tr>
             <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.name}</td>
-            <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.status}</td>
             <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.duration} ms</td>
             <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.error}</td>
           </tr>
@@ -171,7 +170,6 @@ class EmailReporter {
           <thead>
             <tr>
               <th>Test</th>
-              <th>Status</th>
               <th>Duration</th>
               <th>Error Message</th>
             </tr>
