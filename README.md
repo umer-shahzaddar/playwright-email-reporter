@@ -36,6 +36,7 @@ module.exports = {
       smtpPass: 'your-email-password',
       from: 'your-email@example.com',
       to: 'recipient@example.com',
+      mailOnSuccess: true
     }],
   ],
 };
