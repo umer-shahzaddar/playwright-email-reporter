@@ -23,6 +23,16 @@ class EmailReporter {
     this.results.startTime = new Date();
   }
 
+  onStdOut(chunk) {
+    const text = chunk.toString("utf-8");
+    process.stdout.write(text);
+  }
+
+  onStdErr(chunk) {
+    const text = chunk.toString("utf-8");
+    process.stderr.write(text);
+  }
+
   onTestEnd(test, result) {
     this.results.total++;
     if (result.status === "passed") this.results.passed++;
