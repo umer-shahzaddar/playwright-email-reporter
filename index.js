@@ -20,8 +20,9 @@ class EmailReporter {
     this.processedTests = new Set(); // To track unique tests
   }
 
-  onBegin(config) {
+  onBegin(config, suite) {
     this.results.startTime = new Date();
+    this.suite = suite;
   }
 
   onStdOut(chunk) {
@@ -34,35 +35,32 @@ class EmailReporter {
     process.stderr.write(text);
   }
 
-  onTestEnd(test, result) {
-    const uniqueTestId = test.id;
-
-    // Only process the test if it hasn't been seen before
-    if (this.processedTests.has(uniqueTestId)) return;
-    this.processedTests.add(uniqueTestId);
-
-    this.results.total++;
-
-    if (result.status === "passed" && result.retry > 0) {
-      this.results.flaky++;
-    } else if (result.status === "passed") {
-      this.results.passed++;
-    } else if (result.status === "skipped") {
-      this.results.skipped++;
-    } else {
-      this.results.failed++;
-      const specFileName = test.location.file.split('/').pop();
-      const describePart = test.parent.title ? ` > ${test.parent.title}` : "";
-      this.results.failedTests.push({
-        name: `${specFileName}${describePart} > ${test.title}`,
-        status: result.status,
-        duration: result.duration,
-        error: ansiToHtml.toHtml(result.error?.message || "No error message"),
-      });
-    }
-  }
-
   async onEnd() {
+    this.suite.allTests().forEach((test) => {
+      this.results.total++;
+
+      const results = test.results;
+      const lastResult = results.at(-1);
+
+      if (lastResult.status === "passed" && lastResult.retry > 0) {
+        this.results.flaky++;
+      } else if (lastResult.status === "passed") {
+        this.results.passed++;
+      } else if (lastResult.status === "skipped") {
+        this.results.skipped++;
+      } else {
+        this.results.failed++;
+        const specFileName = test.location.file.split('/').pop();
+        const describePart = test.parent.title ? ` > ${test.parent.title}` : "";
+        this.results.failedTests.push({
+          name: `${specFileName}${describePart} > ${test.title}`,
+          status: lastResult.status,
+          duration: lastResult.duration,
+          error: ansiToHtml.toHtml(lastResult.error?.message || "No error message"),
+        });
+      }
+    });
+
     this.results.endTime = new Date();
     const duration = (this.results.endTime - this.results.startTime) / 1000;
 
@@ -71,6 +69,7 @@ class EmailReporter {
       const htmlContent = this.generateHtmlReport(duration);
       await this.sendEmail(htmlContent);
     }
+
   }
 
   generateHtmlReport(duration) {
