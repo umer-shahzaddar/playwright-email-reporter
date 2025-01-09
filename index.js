@@ -17,6 +17,7 @@ class EmailReporter {
       endTime: null
     };
     this.mailOnSuccess = options.mailOnSuccess || false; // Default to false
+    this.processedTests = new Set(); // To track unique tests
   }
 
   onBegin(config) {
@@ -34,9 +35,21 @@ class EmailReporter {
   }
 
   onTestEnd(test, result) {
+    const uniqueTestId = test.id;
+
+    // Only process the test if it hasn't been seen before
+    if (this.processedTests.has(uniqueTestId)) return;
+    this.processedTests.add(uniqueTestId);
+
     this.results.total++;
-    if (result.status === "passed") this.results.passed++;
-    if (result.status === "failed") {
+
+    if (result.status === "passed" && result.retry > 0) {
+      this.results.flaky++;
+    } else if (result.status === "passed") {
+      this.results.passed++;
+    } else if (result.status === "skipped") {
+      this.results.skipped++;
+    } else {
       this.results.failed++;
       const specFileName = test.location.file.split('/').pop();
       const describePart = test.parent.title ? ` > ${test.parent.title}` : "";
@@ -47,8 +60,6 @@ class EmailReporter {
         error: ansiToHtml.toHtml(result.error?.message || "No error message"),
       });
     }
-    if (result.status === "flaky") this.results.flaky++;
-    if (result.status === "skipped") this.results.skipped++;
   }
 
   async onEnd() {
