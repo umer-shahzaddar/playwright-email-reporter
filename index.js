@@ -13,6 +13,7 @@ class EmailReporter {
       startTime: null,
       endTime: null
     };
+    this.mailOnSuccess = options.mailOnSuccess || false; // Default to false
   }
 
   onBegin(config) {
@@ -41,8 +42,11 @@ class EmailReporter {
     this.results.endTime = new Date();
     const duration = (this.results.endTime - this.results.startTime) / 1000;
 
-    const htmlContent = this.generateHtmlReport(duration);
-    await this.sendEmail(htmlContent);
+    // Send email if mailOnSuccess is true or if there are failed tests
+    if (this.mailOnSuccess || this.results.failed > 0) {
+      const htmlContent = this.generateHtmlReport(duration);
+      await this.sendEmail(htmlContent);
+    }
   }
 
   generateHtmlReport(duration) {
