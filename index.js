@@ -1,4 +1,7 @@
 import { createTransport } from "nodemailer";
+import AnsiToHtml from 'ansi-to-html';
+
+const ansiToHtml = new AnsiToHtml();
 
 class EmailReporter {
   constructor(options) {
@@ -31,7 +34,7 @@ class EmailReporter {
         name: `${specFileName}${describePart} > ${test.title}`,
         status: result.status,
         duration: result.duration,
-        error: result.error?.message || "No error message",
+        error: ansiToHtml.toHtml(result.error?.message || "No error message"),
       });
     }
     if (result.status === "flaky") this.results.flaky++;
@@ -56,10 +59,10 @@ class EmailReporter {
       .map(
         (test) => `
           <tr>
-            <td>${test.name}</td>
-            <td>${test.status}</td>
-            <td>${test.duration} ms</td>
-            <td>${test.error}</td>
+            <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.name}</td>
+            <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.status}</td>
+            <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.duration} ms</td>
+            <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.error}</td>
           </tr>
         `
       )
@@ -67,8 +70,57 @@ class EmailReporter {
 
     return `
       <html>
+      <head>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+          }
+          h3 {
+            color: #343a40;
+          }
+          h3 a {
+            text-decoration: none;
+            color: #0056b3;
+          }
+          table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+          }
+          thead tr {
+            background-color: #f8f9fa;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+          }
+          th, td {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+          }
+          tbody td {
+            text-align: left;
+          }
+          td.passed {
+            color: #28a745;
+          }
+          td.failed {
+            color: #dc3545;
+          }
+          td.flaky {
+            color: #ffc107;
+          }
+          h2 {
+            color: #343a40;
+            margin-top: 20px;
+          }
+          .no-failed-tests {
+            text-align: center;
+          }
+        </style>
+      </head>
       <body>
-        <p>The full report can be found at <a href="${this.options.link}">${this.options.link}</a>.</p>
+        <h3>The full report can be found at <a href="${this.options.link}">${this.options.link}</a>.</h3>
 
         <table border="1" style="border-collapse: collapse; width: 100%;">
           <thead>
@@ -84,9 +136,9 @@ class EmailReporter {
           <tbody>
             <tr>
               <td>${total}</td>
-              <td>${passed}</td>
-              <td>${failed}</td>
-              <td>${flaky}</td>
+              <td class="passed">${passed}</td>
+              <td class="failed">${failed}</td>
+              <td class="flaky">${flaky}</td>
               <td>${skipped}</td>
               <td>${duration}</td>
             </tr>
@@ -104,7 +156,7 @@ class EmailReporter {
             </tr>
           </thead>
           <tbody>
-            ${failedTestsRows || "<tr><td colspan='4'>No failed tests</td></tr>"}
+            ${failedTestsRows || "<tr><td colspan='4' class='no-failed-tests'>No failed tests</td></tr>"}
           </tbody>
         </table>
       </body>
