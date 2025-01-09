@@ -1,6 +1,6 @@
-# playwright-email-reporter-light
+# playwright-email-reporter
 
-`playwright-email-reporter-light` is a custom Playwright reporter that generates an HTML test report and sends it via email. The report includes a summary of test results and detailed information about failed tests.
+`playwright-email-reporter` is a custom Playwright reporter that generates an HTML test report and sends it via email. The report includes a summary of test results and detailed information about failed tests.
 
 ## Features
 
@@ -15,7 +15,7 @@
 Install the package using npm:
 
 ```bash
-npm install playwright-email-reporter-light
+npm install playwright-email-reporter
 ```
 
 ## Usage
@@ -27,7 +27,7 @@ In your Playwright configuration file (`playwright.config.js`), add the reporter
 ```javascript
 module.exports = {
   reporter: [
-    ['playwright-email-reporter-light', {
+    ['playwright-email-reporter', {
       link: 'https://example.com/full-report',
       smtpHost: 'smtp.example.com',
       smtpPort: 587,
@@ -110,5 +110,5 @@ This project is licensed under the MIT License.
 
 ## Repository
 
-[GitHub Repository](https://github.com/your-username/playwright-email-reporter-light)
+[GitHub Repository](https://github.com/your-username/playwright-email-reporter)
 
