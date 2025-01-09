@@ -32,6 +32,7 @@ export default defineConfig({
       smtpPass: 'your-email-password',
       from: 'your-email@example.com',
       to: 'recipient@example.com',
+      mailOnSuccess: true
     }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
