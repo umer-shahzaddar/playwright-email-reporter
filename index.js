@@ -166,9 +166,9 @@ class EmailReporter {
           <tbody>
             <tr>
               <td>${total}</td>
-              <td class="passed">${passed}</td>
-              <td class="failed">${failed}</td>
-              <td class="flaky">${flaky}</td>
+              <td class="passed">${passed} ✅</td>
+              <td class="failed">${failed} ❌</td>
+              <td class="flaky">${flaky} ⚠️</td>
               <td>${skipped}</td>
               <td>${duration}</td>
             </tr>
