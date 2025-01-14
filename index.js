@@ -51,9 +51,9 @@ class EmailReporter {
       } else {
         this.results.failed++;
         const specFileName = test.location.file.split('/').pop();
-        const describePart = test.parent.title ? ` > ${test.parent.title}` : "";
+        const describePart = test.parent.title;
         this.results.failedTests.push({
-          name: `${specFileName}${describePart} > ${test.title}`,
+          name: `${test.title} < ${describePart} < ${specFileName}`,
           status: lastResult.status,
           duration: lastResult.duration,
           error: ansiToHtml.toHtml(lastResult.error?.message || "No error message"),
