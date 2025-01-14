@@ -62,7 +62,18 @@ class EmailReporter {
     });
 
     this.results.endTime = new Date();
-    const duration = (this.results.endTime - this.results.startTime) / 1000;
+    const durationInMs = this.results.endTime - this.results.startTime;
+
+    let duration;
+    if (durationInMs >= 3600000) {
+      duration = `${(durationInMs / 3600000).toFixed(2)} hours`;
+    } else if (durationInMs >= 60000) {
+      duration = `${(durationInMs / 60000).toFixed(2)} minutes`;
+    } else if (durationInMs >= 1000) {
+      duration = `${(durationInMs / 1000).toFixed(2)} seconds`;
+    } else {
+      duration = `${durationInMs} ms`;
+    }
 
     // Send email if mailOnSuccess is true or if there are failed tests
     if (this.mailOnSuccess || this.results.failed > 0) {
@@ -149,7 +160,7 @@ class EmailReporter {
               <th>Failed</th>
               <th>Flaky</th>
               <th>Skipped</th>
-              <th>Duration (seconds)</th>
+              <th>Duration</th>
             </tr>
           </thead>
           <tbody>
