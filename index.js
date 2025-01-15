@@ -63,7 +63,17 @@ class EmailReporter {
 
     this.results.endTime = new Date();
     const durationInMs = this.results.endTime - this.results.startTime;
+    let duration = this.formatDuration(durationInMs);
 
+    // Send email if mailOnSuccess is true or if there are failed tests
+    if (this.mailOnSuccess || this.results.failed > 0) {
+      const htmlContent = this.generateHtmlReport(duration);
+      await this.sendEmail(htmlContent);
+    }
+
+  }
+
+  formatDuration(durationInMs) {
     let duration;
     if (durationInMs >= 3600000) {
       duration = `${(durationInMs / 3600000).toFixed(2)} hours`;
@@ -74,14 +84,8 @@ class EmailReporter {
     } else {
       duration = `${durationInMs} ms`;
     }
-
-    // Send email if mailOnSuccess is true or if there are failed tests
-    if (this.mailOnSuccess || this.results.failed > 0) {
-      const htmlContent = this.generateHtmlReport(duration);
-      await this.sendEmail(htmlContent);
-    }
-
-  }
+    return duration;
+  } 
 
   generateHtmlReport(duration) {
     const { total, passed, failed, flaky, skipped, failedTests } = this.results;
@@ -91,7 +95,7 @@ class EmailReporter {
         (test) => `
           <tr>
             <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.name}</td>
-            <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.duration} ms</td>
+            <td style="background-color: #1a1a2e; color: #f8f9fa;">${this.formatDuration(test.duration)} ms</td>
             <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.error}</td>
           </tr>
         `
