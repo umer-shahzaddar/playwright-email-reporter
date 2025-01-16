@@ -95,7 +95,7 @@ class EmailReporter {
         (test) => `
           <tr>
             <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.name}</td>
-            <td style="background-color: #1a1a2e; color: #f8f9fa;">${this.formatDuration(test.duration)} ms</td>
+            <td style="background-color: #1a1a2e; color: #f8f9fa;">${this.formatDuration(test.duration)}</td>
             <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.error}</td>
           </tr>
         `
