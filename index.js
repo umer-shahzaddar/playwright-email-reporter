@@ -74,18 +74,17 @@ class EmailReporter {
   }
 
   formatDuration(durationInMs) {
-    let duration;
-    if (durationInMs >= 3600000) {
-      duration = `${(durationInMs / 3600000).toFixed(2)} hours`;
-    } else if (durationInMs >= 60000) {
-      duration = `${(durationInMs / 60000).toFixed(2)} minutes`;
-    } else if (durationInMs >= 1000) {
-      duration = `${(durationInMs / 1000).toFixed(2)} seconds`;
-    } else {
-      duration = `${durationInMs} ms`;
-    }
-    return duration;
-  } 
+    const hours = Math.floor(durationInMs / 3600000);
+    const minutes = Math.floor((durationInMs % 3600000) / 60000);
+    const seconds = Math.floor((durationInMs % 60000) / 1000);
+
+    const parts = [];
+    if (hours > 0) parts.push(`${hours}h`);
+    if (minutes > 0) parts.push(`${minutes}m`);
+    if (seconds > 0) parts.push(`${seconds}s`);
+
+    return parts.length > 0 ? parts.join(' ') : `${durationInMs} ms`;
+  }
 
   generateHtmlReport(duration) {
     const { total, passed, failed, flaky, skipped, failedTests } = this.results;
