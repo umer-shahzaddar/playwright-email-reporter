@@ -16,8 +16,10 @@ class EmailReporter {
       startTime: null,
       endTime: null
     };
+    this.reportLink = options.reportLink || null;
     this.mailOnSuccess = options.mailOnSuccess || false; // Default to false
-    this.reportName = options.reportName || 'Playwright Test Report'; // Default to false
+    this.reportName = options.reportName || 'Playwright Test Report';
+    this.reportDesc = options.reportDesc || '';
     this.processedTests = new Set(); // To track unique tests
   }
 
@@ -90,6 +92,11 @@ class EmailReporter {
   generateHtmlReport(duration) {
     const { total, passed, failed, flaky, skipped, failedTests } = this.results;
 
+    let reportLink = '';
+    if (this.reportLink) {
+      reportLink = `The full report can be found at <a href="${this.reportLink}">${this.reportLink}</a>.`
+    }
+
     const failedTestsRows = failedTests
       .map(
         (test) => `
@@ -154,11 +161,15 @@ class EmailReporter {
           h1 {
             color: #343a40;
           }
+          h4 {
+            color: #343a40;
+          }
         </style>
       </head>
       <body>
         <h1>${this.reportName}</h1>
-        <h3>The full report can be found at <a href="${this.options.link}">${this.options.link}</a>.</h3>
+        <h4>${this.reportDesc}</h4>
+        <h3>${reportLink}</h3>
 
         <table border="1" style="border-collapse: collapse; width: 100%;">
           <thead>
