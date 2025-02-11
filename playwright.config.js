@@ -1,12 +1,12 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
-import { resolve } from 'path';
+import path, { resolve } from 'path';
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -24,15 +24,17 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     [resolve(__dirname, 'index.js'), {
-      link: 'https://example.com/full-report',
-      smtpHost: 'smtp.example.com',
-      smtpPort: 587,
-      smtpSecure: false,
-      smtpUser: 'your-email@example.com',
-      smtpPass: 'your-email-password',
-      from: 'your-email@example.com',
-      to: 'recipient@example.com',
-      mailOnSuccess: true
+      reportName: process.env.REPORT_NAME,
+      link: process.env.LINK,
+      reportDesc: process.env.REPORT_DESC,
+      smtpHost: process.env.SMTP_HOST,
+      smtpPort: process.env.SMTP_PORT,
+      smtpSecure: process.env.SMTP_SECURE,
+      smtpUser: process.env.SMTP_USER,
+      smtpPass: process.env.SMTP_PSW,
+      from: process.env.FROM,
+      to: process.env.TO,
+      mailOnSuccess: process.env.MAIL_ON_SUCCESS
     }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */

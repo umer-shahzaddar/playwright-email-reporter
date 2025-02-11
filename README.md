@@ -5,9 +5,7 @@
 ## Features
 
 - Generates a summary table with total tests, passed, failed, flaky, skipped, and duration.
-- Includes a detailed table for failed tests with the format:
-  - `file > describe > name` or `file > name` if no describe exists.
-  - Test status, duration, and error message.
+- Includes a detailed table for failed tests.
 - Sends the report via email to the specified recipient(s).
 
 ## Installation
@@ -28,77 +26,53 @@ In your Playwright configuration file (`playwright.config.js`), add the reporter
 module.exports = {
   reporter: [
     ['playwright-email-reporter', {
-      link: 'https://example.com/full-report',
-      smtpHost: 'smtp.example.com',
-      smtpPort: 587,
-      smtpSecure: false,
-      smtpUser: 'your-email@example.com',
-      smtpPass: 'your-email-password',
-      from: 'your-email@example.com',
-      to: 'recipient@example.com',
-      mailOnSuccess: true
+      reportName: process.env.REPORT_NAME,
+      link: process.env.LINK,
+      reportDesc: process.env.REPORT_DESC,
+      smtpHost: process.env.SMTP_HOST,
+      smtpPort: process.env.SMTP_PORT,
+      smtpSecure: process.env.SMTP_SECURE,
+      smtpUser: process.env.SMTP_USER,
+      smtpPass: process.env.SMTP_PSW,
+      from: process.env.FROM,
+      to: process.env.TO,
+      mailOnSuccess: process.env.MAIL_ON_SUCCESS
     }],
   ],
 };
 ```
 
-### Running the Tests
-
-Run your Playwright tests as usual:
-
-```bash
-npx playwright test
-```
-
-After the tests complete, the reporter will generate the HTML report and send it via email to the specified recipient.
+| Option | Description | Required | Default |
+| --- | --- | --- | --- |
+| `reportName` | Name of the test report | `false` | `Playwright Test Report` |
+| `link` | Link to the external test report | `false` | `undefined` |
+| `reportDesc` | Description of the test report | `false` | `undefined` |
+| `smtpHost` | SMTP server host | `true` | `undefined` |
+| `smtpPort` | SMTP server port | `true` | `undefined` |
+| `smtpSecure` | Use secure connection (true/false) | `true` | `undefined` |
+| `smtpUser` | SMTP username | `true` | `undefined` |
+| `smtpPass` | SMTP password | `true` | `undefined` |
+| `from` | Sender email address | `true` | `undefined` |
+| `to` | Recipient email addresses (comma-separated) | `true` | `undefined` |
+| `mailOnSuccess` | Send email on successful test execution (true/false) | `false` | `false` |
 
 ## Report Structure
 
 ### Summary Table
 
-| Total Tests | Passed | Failed | Flaky | Skipped | Duration (seconds) |
-|-------------|--------|--------|-------|---------|--------------------|
-|     X       |    X   |    X   |   X   |    X    |         X          |
+| Total Tests | Passed | Failed | Flaky | Skipped | Duration |
+|-------------|--------|--------|-------|---------|----------|
+|     X       |    X   |    X   |   X   |    X    |     X    |
 
 ### Failed Tests Table
 
-| Test                      | Status | Duration | Error Message       |
-|---------------------------|--------|----------|---------------------|
-| `file > describe > name`  | Failed |   X ms   | Error message here  |
-
-## SMTP Configuration
-
-Ensure the SMTP configuration matches your email provider. For example, for Gmail:
-
-```javascript
-smtpHost: 'smtp.gmail.com',
-smtpPort: 587,
-smtpSecure: false,
-smtpUser: 'your-email@gmail.com',
-smtpPass: 'your-app-password',
-```
+| Test                      | Project | Duration | Error Message       |
+|---------------------------|---------|----------|---------------------|
+| `name < describe < file`  |     X   |   X      | Error message here  |
 
 ### Notes for Gmail Users
 - Use an **App Password** instead of your main Gmail password.
 - [Google Account App Passwords Guide](https://support.google.com/accounts/answer/185833).
-
-## Debugging
-
-Enable debugging in the `nodemailer` transport configuration to troubleshoot issues:
-
-```javascript
-const transporter = nodemailer.createTransport({
-  host: this.options.smtpHost,
-  port: this.options.smtpPort,
-  secure: this.options.smtpSecure,
-  auth: {
-    user: this.options.smtpUser,
-    pass: this.options.smtpPass,
-  },
-  debug: true,
-  logger: true,
-});
-```
 
 ## Contributing
 

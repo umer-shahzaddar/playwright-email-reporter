@@ -60,6 +60,7 @@ class EmailReporter {
           status: lastResult.status,
           duration: lastResult.duration,
           error: ansiToHtml.toHtml(lastResult.error?.message || "No error message"),
+          project: (test.titlePath().join(' ')).split(' ')[1] || 'unknown'
         });
       }
     });
@@ -102,6 +103,7 @@ class EmailReporter {
         (test) => `
           <tr>
             <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.name}</td>
+            <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.project}</td>
             <td style="background-color: #1a1a2e; color: #f8f9fa;">${this.formatDuration(test.duration)}</td>
             <td style="background-color: #1a1a2e; color: #f8f9fa;">${test.error}</td>
           </tr>
@@ -199,6 +201,7 @@ class EmailReporter {
           <thead>
             <tr>
               <th>Test</th>
+              <th>Project</th>
               <th>Duration</th>
               <th>Error Message</th>
             </tr>
