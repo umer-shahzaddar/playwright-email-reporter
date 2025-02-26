@@ -60,7 +60,7 @@ class EmailReporter {
           status: lastResult.status,
           duration: lastResult.duration,
           error: ansiToHtml.toHtml(lastResult.error?.message || "No error message"),
-          project: (test.titlePath().join(' ')).split(' ')[1] || 'unknown'
+          project: test.titlePath()[1] || 'unknown'
         });
       }
     });
